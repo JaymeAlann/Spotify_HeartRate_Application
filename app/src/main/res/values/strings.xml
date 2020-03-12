@@ -11,6 +11,7 @@
     <string name="age">Select Birthday</string>
     <string name="Welcome">Welcome to BPM Beats</string>
     <string name="WelcomeSub">Tell us a little about yourself</string>
+    <string name="tempo">BPM: 00.00</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

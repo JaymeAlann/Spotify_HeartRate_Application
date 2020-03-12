@@ -32,18 +32,16 @@ public class OnBoardingActivity extends FragmentActivity {
     private PlayerService mPlayerService;
     MyFragmentPageAdapter myFragmentPageAdapter;
     private BroadcastReceiver songPlayerDataReceiver;
-    private ArrayList<Song> playlistSongs;
-    private String mSongName, mSongArtist, mSongIMGUrl, mSongID;
     private static OnBoardingActivity mOnBoardingActivity;
     private boolean isPlaying = true;
-    private  boolean shuffleBool = false;
+    private  boolean shuffleBool = true;
     private boolean isBound;
     private ImageView shuffle;
     private long minutesDown, minutesUp = 0;
     private long secondsDown, secondsUp = 0;
     ImageButton previousBTN, playPauseBTN, nextBTN;
     private SeekBar songProgressBar;
-    TextView songTitle, songArtist, songProgressPositive, songProgressNegative;
+    TextView songTitle, songArtist, songProgressPositive, songProgressNegative, songTempo;
     Intent playerServiceIntent;
     ServiceConnection myServiceConnection;
 
@@ -168,7 +166,7 @@ public class OnBoardingActivity extends FragmentActivity {
         return mOnBoardingActivity;
     }
 
-    public void updateTextViews(String name, String artist, long songDuration){
+    public void updateTextViews(String name, String artist, long songDuration, double tempo){
         OnBoardingActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -176,6 +174,9 @@ public class OnBoardingActivity extends FragmentActivity {
                 songTitle.setText(name);
                 songArtist = findViewById(R.id.artistName);
                 songArtist.setText(artist);
+                songTempo = findViewById(R.id.songTempo);
+                songTempo.setText("BPM: "+tempo);
+
 
                 if(isPlaying){
 

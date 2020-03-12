@@ -38,7 +38,7 @@
                 android:clickable="true"
                 android:background="@null"
                 android:layout_marginBottom="45dp"
-                android:src="@drawable/shuffle_white"/>
+                android:src="@drawable/shuffle_green"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -140,6 +140,25 @@
                 android:layout_marginBottom="119dp"
                 android:fontFamily="@font/linetocircularpromedium"
                 android:text="@string/artistTemp"
+                android:textColor="@color/colorGrey"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/songTempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="326dp"
+                android:layout_marginLeft="326dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginBottom="119dp"
+                android:fontFamily="@font/linetocircularpromedium"
+                android:text="@string/tempo"
                 android:textColor="@color/colorGrey"
                 android:textSize="12sp" />
 

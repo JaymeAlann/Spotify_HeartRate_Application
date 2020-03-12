@@ -33,6 +33,7 @@ public class PlayerService extends Service {
     private boolean isRunning;
     SongService songService;
     private String songIMG, songURI, songName, songArtist;
+    private double songTempo;
     private int songPos;
     private ArrayList<Song> chosenPlaylistUnsorted;
     private ArrayList<AudioFeatures> playlistAudioFeatures;
@@ -84,6 +85,7 @@ public class PlayerService extends Service {
             playlistAudioFeatures = songService.getAudioFeatures();
             Log.i("AUDIO FEATURES LIST: ",playlistAudioFeatures.size()+"");
             previousSongs.get(0).setSongAudioFeatures(playlistAudioFeatures.get(songPos));
+            songTempo = previousSongs.get(0).getSongAudioFeatures().getTempo();
             songDuration = playlistAudioFeatures.get(songPos).getDuration_ms();
             for(AudioFeatures features : playlistAudioFeatures){
                 chosenPlaylistUnsorted.get(playlistAudioFeatures.indexOf(features)).setSongAudioFeatures(features);
@@ -173,6 +175,7 @@ public class PlayerService extends Service {
                     serviceIntent.putExtra("SongTitle", songName);
                     serviceIntent.putExtra("SongArtist",songArtist);
                     serviceIntent.putExtra("SongDuration_MS", songDuration);
+                    serviceIntent.putExtra("SongTempo",songTempo);
                     serviceIntent.setAction("android.intent.action.IMAGE_RECEIVED");
                     sendBroadcast(serviceIntent);
                     Log.i(TAG, "BROADCAST SENT");
@@ -192,6 +195,7 @@ public class PlayerService extends Service {
         songArtist = nextSong.getAlbum().getAlbumArtists().get(0).getArtistName();
         songIMG = nextSong.getAlbum().getAlbumImages().get(0).getUrl();
         songDuration = nextSong.getSongAudioFeatures().getDuration_ms();
+        songTempo = nextSong.getSongAudioFeatures().getTempo();
 
         previousSongs.add(nextSong);
         startMusic();
@@ -202,6 +206,7 @@ public class PlayerService extends Service {
         songArtist = prevSong.getAlbum().getAlbumArtists().get(0).getArtistName();
         songIMG = prevSong.getAlbum().getAlbumImages().get(0).getUrl();
         songDuration = prevSong.getSongAudioFeatures().getDuration_ms();
+        songTempo = prevSong.getSongAudioFeatures().getTempo();
 
         chosenPlaylistUnsorted.add(prevSong);
         startMusic();

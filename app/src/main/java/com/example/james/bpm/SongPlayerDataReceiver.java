@@ -13,9 +13,10 @@ public class SongPlayerDataReceiver extends BroadcastReceiver {
         String sName = intent.getStringExtra("SongTitle");
         String sArtist = intent.getStringExtra("SongArtist");
         long sDuration = intent.getLongExtra("SongDuration_MS",0);
+        double songTempo = intent.getDoubleExtra("SongTempo",0);
 
         try {
-            OnBoardingActivity.getInstance().updateTextViews(sName,sArtist, sDuration);
+            OnBoardingActivity.getInstance().updateTextViews(sName,sArtist, sDuration, songTempo);
         } catch (Exception e) {
 
         }
