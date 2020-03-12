@@ -42,7 +42,7 @@ public class OnBoardingActivity extends FragmentActivity {
     private long minutesDown, minutesUp = 0;
     private long secondsDown, secondsUp = 0;
     ImageButton previousBTN, playPauseBTN, nextBTN;
-    SeekBar songProgressBar;
+    private SeekBar songProgressBar;
     TextView songTitle, songArtist, songProgressPositive, songProgressNegative;
     Intent playerServiceIntent;
     ServiceConnection myServiceConnection;
@@ -76,6 +76,7 @@ public class OnBoardingActivity extends FragmentActivity {
 
         playerServiceIntent = new Intent(OnBoardingActivity.this, PlayerService.class);
         Bundle serviceBundle = new Bundle();
+        assert passedBundle != null;
         serviceBundle.putSerializable("ChosenPlaylist",(ArrayList<Song>) passedBundle.getSerializable("ChosenPlaylist"));
         serviceBundle.putSerializable("ChosenSong", passedBundle.getSerializable("ChosenSong"));
         playerServiceIntent.putExtras(serviceBundle);
@@ -92,28 +93,20 @@ public class OnBoardingActivity extends FragmentActivity {
         // INITIATE IMAGE BUTTONS FOR CONTROLLING PLAYBACK
         previousBTN = findViewById(R.id.previousBTN);
         nextBTN = findViewById(R.id.skipBTN);
-        previousBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isBound){
-                    mPlayerService.getPreviousSongForQueue();
-                    songProgressBar.setProgress(0);
-                    if (!isPlaying){
-                        songService.pauseSong();
-                    }
-                }
+        previousBTN.setOnClickListener(v -> {
+            if(isBound){
+                mPlayerService.getPreviousSongForQueue();
+                songProgressBar.setProgress(0);
+                playPauseBTN.setImageResource(android.R.drawable.ic_media_pause);
+                isPlaying=true;
             }
         });
-        nextBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isBound){
-                    mPlayerService.getNextSongForQueue();
-                    songProgressBar.setProgress(0);
-                    if (!isPlaying){
-                        songService.pauseSong();
-                    }
-                }
+        nextBTN.setOnClickListener(v -> {
+            if(isBound){
+                mPlayerService.getNextSongForQueue();
+                songProgressBar.setProgress(0);
+                playPauseBTN.setImageResource(android.R.drawable.ic_media_pause);
+                isPlaying=true;
             }
         });
 
@@ -124,18 +117,35 @@ public class OnBoardingActivity extends FragmentActivity {
         pager.setAdapter(myFragmentPageAdapter);
 
         playPauseBTN = findViewById(R.id.playPauseBTN);
-        playPauseBTN.setOnClickListener(new View.OnClickListener() {
+        playPauseBTN.setOnClickListener(v -> {
+            if(isPlaying && isBound){
+                mPlayerService.pauseSpotifyRemote();
+                isPlaying=false;
+                playPauseBTN.setImageResource(android.R.drawable.ic_media_play);
+            }else if(!isPlaying && isBound){
+                mPlayerService.resumeSpotifyRemote();
+                isPlaying=true;
+                playPauseBTN.setImageResource(android.R.drawable.ic_media_pause);
+            }
+        });
+
+        songProgressBar = findViewById(R.id.seekBar);
+        songProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(isPlaying){
-                    songService.pauseSong();
-                    isPlaying=false;
-                    playPauseBTN.setImageResource(android.R.drawable.ic_media_play);
-                }else if(!isPlaying){
-                    songService.playSong();
-                    isPlaying=true;
-                    playPauseBTN.setImageResource(android.R.drawable.ic_media_pause);
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(isBound && fromUser){
+                    mPlayerService.seekToSpotifyRemote(progress);
                 }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
@@ -166,7 +176,6 @@ public class OnBoardingActivity extends FragmentActivity {
                 songTitle.setText(name);
                 songArtist = findViewById(R.id.artistName);
                 songArtist.setText(artist);
-                songProgressBar = findViewById(R.id.seekBar);
 
                 if(isPlaying){
 
