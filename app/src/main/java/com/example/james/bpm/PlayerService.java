@@ -212,7 +212,7 @@ public class PlayerService extends Service {
             return;
         }
         chosenPlaylistUnsorted = quickSort(chosenPlaylistUnsorted);
-        int heartRate = 85;
+        int heartRate = 120;
         Iterator<Song> iterator = chosenPlaylistUnsorted.iterator();
         while (iterator.hasNext() && iterator.next().getSongAudioFeatures().getTempo() <= heartRate){
             Log.i(TAG, iterator.next().getSongName()+" Tempo: "+iterator.next().getSongAudioFeatures().getTempo());
@@ -242,6 +242,18 @@ public class PlayerService extends Service {
                         Log.d("MainActivity", track.name + " by " + track.artist.name);
                     }
                 });
+    }
+
+    public void pauseSpotifyRemote(){
+        mSpotifyAppRemote.getPlayerApi().pause();
+    }
+
+    public void resumeSpotifyRemote(){
+        mSpotifyAppRemote.getPlayerApi().resume();
+    }
+
+    public void seekToSpotifyRemote(long position){
+        mSpotifyAppRemote.getPlayerApi().seekTo(position);
     }
 
     protected void onStop() {
