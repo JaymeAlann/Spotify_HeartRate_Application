@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">BPM</string>
+    <string name="playlistLabel">Playlists</string>
+    <string name="songLabel">Songs</string>
+    <string name="tempSongValue">0:00</string>
+    <string name="artistTemp">Artist Name</string>
+    <string name="songTemp">Song Title Temp</string>
+    <string name="spinner_title">Playlist</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="age">Select Birthday</string>
+    <string name="Welcome">Welcome to BPM Beats</string>
+    <string name="WelcomeSub">Tell us a little about yourself</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>

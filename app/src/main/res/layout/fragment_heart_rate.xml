@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".HeartRateFragment">
+
+    <pl.bclogic.pulsator4droid.library.PulsatorLayout
+        android:id="@+id/pulsator"
+        android:layout_width="match_parent"
+        android:layout_height="503dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="75dp"
+        app:pulse_color="@color/spotifyGreen"
+        app:pulse_count="1"
+        app:pulse_duration="750"
+        app:pulse_interpolator="Linear"
+        app:pulse_repeat="0"
+        app:pulse_startFromScratch="true">
+
+        <ImageView
+            android:id="@+id/SongImageView"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="86dp"
+            android:layout_marginLeft="86dp"
+            android:layout_marginTop="110dp"
+            android:layout_marginEnd="75dp"
+            android:layout_marginRight="75dp"
+            android:src="@drawable/spot_circle" />
+
+        <ImageView
+            android:id="@+id/heartpng"
+            android:layout_width="37dp"
+            android:layout_height="31dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="165dp"
+            android:layout_marginEnd="147dp"
+            android:layout_marginRight="147dp"
+            android:src="@drawable/heart" />
+
+        <TextView
+            android:id="@+id/HeartRateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="179dp"
+            android:layout_marginEnd="118dp"
+            android:layout_marginRight="118dp"
+            android:text="85"
+            android:textColor="#FFFFFF"
+            android:textSize="90sp" />
+    </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+
+</FrameLayout>

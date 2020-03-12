@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/previous"
+        android:icon="@drawable/skipprevious"
+        android:title=""
+        />
+    <item
+        android:id="@+id/Play"
+        android:icon="@drawable/play"
+        android:title=""
+        />
+    <item
+        android:id="@+id/Skip"
+        android:icon="@drawable/skipnext"
+        android:title=""
+        />
+
+
+
+</menu>
