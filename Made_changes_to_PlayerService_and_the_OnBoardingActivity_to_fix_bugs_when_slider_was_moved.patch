@@ -1,0 +1,141 @@
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(date 1583984274737)
++++ .idea/vcs.xml	(date 1583984274737)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: app/src/main/java/com/example/james/bpm/OnBoardingActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/james/bpm/OnBoardingActivity.java	(revision 56ec15c13925efc56324106e270ff993a3cb903d)
++++ app/src/main/java/com/example/james/bpm/OnBoardingActivity.java	(date 1583987276886)
+@@ -42,7 +42,7 @@
+     private long minutesDown, minutesUp = 0;
+     private long secondsDown, secondsUp = 0;
+     ImageButton previousBTN, playPauseBTN, nextBTN;
+-    SeekBar songProgressBar;
++    private SeekBar songProgressBar;
+     TextView songTitle, songArtist, songProgressPositive, songProgressNegative;
+     Intent playerServiceIntent;
+     ServiceConnection myServiceConnection;
+@@ -98,9 +98,8 @@
+                 if(isBound){
+                     mPlayerService.getPreviousSongForQueue();
+                     songProgressBar.setProgress(0);
+-                    if (!isPlaying){
+-                        songService.pauseSong();
+-                    }
++                    playPauseBTN.setImageResource(android.R.drawable.ic_media_pause);
++                    isPlaying=true;
+                 }
+             }
+         });
+@@ -110,9 +109,8 @@
+                 if(isBound){
+                     mPlayerService.getNextSongForQueue();
+                     songProgressBar.setProgress(0);
+-                    if (!isPlaying){
+-                        songService.pauseSong();
+-                    }
++                    playPauseBTN.setImageResource(android.R.drawable.ic_media_pause);
++                    isPlaying=true;
+                 }
+             }
+         });
+@@ -127,18 +125,38 @@
+         playPauseBTN.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+-                if(isPlaying){
+-                    songService.pauseSong();
++                if(isPlaying && isBound){
++                    mPlayerService.pauseSpotifyRemote();
+                     isPlaying=false;
+                     playPauseBTN.setImageResource(android.R.drawable.ic_media_play);
+-                }else if(!isPlaying){
+-                    songService.playSong();
++                }else if(!isPlaying && isBound){
++                    mPlayerService.resumeSpotifyRemote();
+                     isPlaying=true;
+                     playPauseBTN.setImageResource(android.R.drawable.ic_media_pause);
+                 }
+             }
+         });
+ 
++        songProgressBar = findViewById(R.id.seekBar);
++        songProgressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
++            @Override
++            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
++                if(isBound && fromUser){
++                    mPlayerService.seekToSpotifyRemote(progress);
++                }
++            }
++
++            @Override
++            public void onStartTrackingTouch(SeekBar seekBar) {
++
++            }
++
++            @Override
++            public void onStopTrackingTouch(SeekBar seekBar) {
++
++            }
++        });
++
+     }
+ 
+     @Override
+@@ -166,7 +184,6 @@
+                 songTitle.setText(name);
+                 songArtist = findViewById(R.id.artistName);
+                 songArtist.setText(artist);
+-                songProgressBar = findViewById(R.id.seekBar);
+ 
+                 if(isPlaying){
+ 
+Index: app/src/main/java/com/example/james/bpm/PlayerService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/james/bpm/PlayerService.java	(revision 56ec15c13925efc56324106e270ff993a3cb903d)
++++ app/src/main/java/com/example/james/bpm/PlayerService.java	(date 1583986969366)
+@@ -212,7 +212,7 @@
+             return;
+         }
+         chosenPlaylistUnsorted = quickSort(chosenPlaylistUnsorted);
+-        int heartRate = 85;
++        int heartRate = 120;
+         Iterator<Song> iterator = chosenPlaylistUnsorted.iterator();
+         while (iterator.hasNext() && iterator.next().getSongAudioFeatures().getTempo() <= heartRate){
+             Log.i(TAG, iterator.next().getSongName()+" Tempo: "+iterator.next().getSongAudioFeatures().getTempo());
+@@ -244,6 +244,18 @@
+                 });
+     }
+ 
++    public void pauseSpotifyRemote(){
++        mSpotifyAppRemote.getPlayerApi().pause();
++    }
++
++    public void resumeSpotifyRemote(){
++        mSpotifyAppRemote.getPlayerApi().resume();
++    }
++
++    public void seekToSpotifyRemote(long position){
++        mSpotifyAppRemote.getPlayerApi().seekTo(position);
++    }
++
+     protected void onStop() {
+         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+     }
