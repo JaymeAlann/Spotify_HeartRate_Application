@@ -14,52 +14,52 @@
         android:layout_marginBottom="75dp"
         app:pulse_color="@color/spotifyGreen"
         app:pulse_count="1"
-        app:pulse_duration="750"
+        app:pulse_duration="705"
         app:pulse_interpolator="Linear"
         app:pulse_repeat="0"
         app:pulse_startFromScratch="true">
 
-        <ImageView
-            android:id="@+id/SongImageView"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginStart="86dp"
-            android:layout_marginLeft="86dp"
-            android:layout_marginTop="110dp"
-            android:layout_marginEnd="75dp"
-            android:layout_marginRight="75dp"
-            android:src="@drawable/spot_circle" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/heartpng"
-            android:layout_width="37dp"
-            android:layout_height="31dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="165dp"
-            android:layout_marginEnd="147dp"
-            android:layout_marginRight="147dp"
-            android:src="@drawable/heart" />
+            <ImageView
+                android:id="@+id/SongImageView"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/spot_circle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.496"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/HeartRateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="179dp"
-            android:layout_marginEnd="118dp"
-            android:layout_marginRight="118dp"
-            android:text="85"
-            android:textColor="#FFFFFF"
-            android:textSize="90sp" />
+            <ImageView
+                android:id="@+id/heartpng"
+                android:layout_width="37dp"
+                android:layout_height="31dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/heart"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/SongImageView" />
+
+            <TextView
+                android:id="@+id/HeartRateText"
+                android:layout_width="105dp"
+                android:layout_height="110dp"
+                android:text="85"
+                android:textColor="#FFFFFF"
+                android:textSize="85sp"
+                app:layout_constraintBottom_toBottomOf="@+id/SongImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/heartpng"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </pl.bclogic.pulsator4droid.library.PulsatorLayout>
 
 </FrameLayout>

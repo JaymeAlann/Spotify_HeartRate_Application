@@ -57,7 +57,7 @@ public class UserInformationActivity extends AppCompatActivity {
             c.set(Calendar.YEAR, year);
             c.set(Calendar.MONTH, month);
             c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            String format = new SimpleDateFormat("DD MM YYYY").format(c.getTime());
+            String format = new SimpleDateFormat("dd mm yyyy").format(c.getTime());
             editor = msharedPreferences.edit();
             editor.putString("USER_INFORMATION", format);
             editor.commit();

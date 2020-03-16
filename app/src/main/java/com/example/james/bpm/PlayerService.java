@@ -30,6 +30,8 @@ public class PlayerService extends Service {
     private long countdown;
     private int currentBPM=105;
 
+
+    private HeartRateFragment heartRateFragment;
     private boolean isRunning;
     SongService songService;
     private String songIMG, songURI, songName, songArtist;
@@ -217,7 +219,7 @@ public class PlayerService extends Service {
             return;
         }
         chosenPlaylistUnsorted = quickSort(chosenPlaylistUnsorted);
-        int heartRate = 120;
+        int heartRate = 85;
         Iterator<Song> iterator = chosenPlaylistUnsorted.iterator();
         while (iterator.hasNext() && iterator.next().getSongAudioFeatures().getTempo() <= heartRate){
             Log.i(TAG, iterator.next().getSongName()+" Tempo: "+iterator.next().getSongAudioFeatures().getTempo());
