@@ -12,5 +12,7 @@
     <string name="Welcome">Welcome to BPM Beats</string>
     <string name="WelcomeSub">Tell us a little about yourself</string>
     <string name="tempo">BPM: 00.00</string>
+    <string name="SearchDevice">Search For Device</string>
+    <string name="DialogHeaderBluetooth">Please select your bluetooth device</string>
 
 </resources>

@@ -80,6 +80,7 @@ public class OnBoardingActivity extends FragmentActivity {
         playerServiceIntent.putExtras(serviceBundle);
         playerServiceIntent.putExtra("SongPosition",getIntent().getIntExtra("SongPosition",0));
         startService(playerServiceIntent);
+
         if(!isBound){
             bindMyService();
             Intent intent = new Intent(OnBoardingActivity.this, PlayerService.class);
@@ -240,7 +241,6 @@ public class OnBoardingActivity extends FragmentActivity {
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     PlayerService.myBinder binder =(PlayerService.myBinder)service;
                     mPlayerService = binder.getService();
-                    Toast.makeText(OnBoardingActivity.this,"Service Bounded",Toast.LENGTH_SHORT).show();
                     isBound = true;
                 }
 
