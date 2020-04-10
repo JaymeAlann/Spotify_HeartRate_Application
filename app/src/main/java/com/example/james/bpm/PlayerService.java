@@ -78,10 +78,12 @@ public class PlayerService extends Service {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void setPlayerState(){
+        // Create a String array from the playlists of Song Id
         String[] tempArray = new String[chosenPlaylistUnsorted.size()];
         for(int listIndex = 0; listIndex<chosenPlaylistUnsorted.size(); listIndex++){
             tempArray[listIndex] = chosenPlaylistUnsorted.get(listIndex).getSongID();
         }
+        // Create a string of ID's to be parsed for information.
         String joinedIDs = String.join(",", tempArray);
         songService.getSongsAudioFeatures(() -> {
             playlistAudioFeatures = songService.getAudioFeatures();
@@ -93,6 +95,7 @@ public class PlayerService extends Service {
                 chosenPlaylistUnsorted.get(playlistAudioFeatures.indexOf(features)).setSongAudioFeatures(features);
             }
             chosenPlaylistUnsorted = quickSort(chosenPlaylistUnsorted);
+
             countdown = songDuration;
 
             new Thread(new Runnable() {
@@ -146,17 +149,9 @@ public class PlayerService extends Service {
 
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         mSpotifyAppRemote = spotifyAppRemote;
-                        Log.d("MainActivity", "Connected! Yay!");
-
-                        // Now you can start interacting with App Remote
                         connected(songURI);
-
                     }
-
                     public void onFailure(Throwable throwable) {
-                        Log.e("MyActivity", throwable.getMessage(), throwable);
-
-                        // Something went wrong when attempting to connect! Handle errors here
                     }
                 });
     }

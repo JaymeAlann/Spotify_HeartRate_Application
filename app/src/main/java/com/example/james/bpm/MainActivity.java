@@ -36,14 +36,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         songService = new SongService(getApplicationContext());
         SharedPreferences sharedPreferences = this.getSharedPreferences("SPOTIFY", 0);
-
-
         getPlaylists();
-
-
     }
 
     private void getPlaylists(){

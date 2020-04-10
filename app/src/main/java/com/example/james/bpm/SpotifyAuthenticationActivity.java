@@ -81,27 +81,17 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
             User user = userService.getUser();
             editor = getSharedPreferences("SPOTIFY", 0).edit();
             editor.putString("userid", user.id);
+            editor.putString("userName", user.display_name);
+            editor.putString("userImage", user.images.get(0).getUrl());
             Log.d("STARTING", "GOT USER INFORMATION");
             // We use commit instead of apply because we need the information stored immediately
             editor.commit();
-            if (msharedPreferences.getString("USER_INFORMATION","default").equals("default")) {
-                Log.d("USER_INFORMATION", msharedPreferences.getString("USER_INFORMATION","default"));
-                startUserInformationActivity();
-            }else {
-                startMainActivity();
-                Log.d("USER_INFORMATION", msharedPreferences.getString("USER_INFORMATION","default"));
-            }
-
+            startMainActivity();
         });
     }
 
     private void startMainActivity() {
         Intent newintent = new Intent(SpotifyAuthenticationActivity.this, MainActivity.class);
         startActivity(newintent);
-    }
-
-    private void startUserInformationActivity() {
-        Intent intent = new Intent(SpotifyAuthenticationActivity.this, UserInformationActivity.class);
-        startActivity(intent);
     }
 }
