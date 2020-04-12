@@ -47,6 +47,7 @@ public class StartupActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(StartupActivity.this, SpotifyAuthenticationActivity.class);
+                finish();
                 startActivity(intent);
             }
         },5500);

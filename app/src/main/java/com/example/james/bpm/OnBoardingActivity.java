@@ -76,9 +76,9 @@ public class OnBoardingActivity extends FragmentActivity {
         Bundle serviceBundle = new Bundle();
         assert passedBundle != null;
         serviceBundle.putSerializable("ChosenPlaylist",(ArrayList<Song>) passedBundle.getSerializable("ChosenPlaylist"));
-        serviceBundle.putSerializable("ChosenSong", passedBundle.getSerializable("ChosenSong"));
+        //serviceBundle.putSerializable("ChosenSong", passedBundle.getSerializable("ChosenSong"));
         playerServiceIntent.putExtras(serviceBundle);
-        playerServiceIntent.putExtra("SongPosition",getIntent().getIntExtra("SongPosition",0));
+        //playerServiceIntent.putExtra("SongPosition",getIntent().getIntExtra("SongPosition",0));
         startService(playerServiceIntent);
 
         if(!isBound){
@@ -231,6 +231,8 @@ public class OnBoardingActivity extends FragmentActivity {
         stopService(playerServiceIntent);
         unbindService(myServiceConnection);
         this.finish();
+        Intent intent = new Intent(OnBoardingActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
 

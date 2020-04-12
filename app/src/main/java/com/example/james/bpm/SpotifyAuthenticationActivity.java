@@ -86,6 +86,7 @@ public class SpotifyAuthenticationActivity extends AppCompatActivity {
             Log.d("STARTING", "GOT USER INFORMATION");
             // We use commit instead of apply because we need the information stored immediately
             editor.commit();
+            finish();
             startMainActivity();
         });
     }

@@ -30,9 +30,6 @@ public class HeartRateFragment extends Fragment{
 
     private static final String TAG = "Heart Rate Fragment";
 
-    private ImageButton btnONOFF;
-
-
     public static HeartRateFragment newInstance() {
         HeartRateFragment fragment = new HeartRateFragment();
         Bundle args = new Bundle();
@@ -50,16 +47,6 @@ public class HeartRateFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_heart_rate, container, false);
         // Inflate the layout for this fragment
-
-        btnONOFF = view.findViewById(R.id.BluetoothOnOff);
-
-        btnONOFF.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
 
         PulsatorLayout pulsator = view.findViewById(R.id.pulsator);
         pulsator.start();

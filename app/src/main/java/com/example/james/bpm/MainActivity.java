@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView playlistName, playlistOwner;
     private ArrayList<Song> recentlyPlayedTracks;
     private ArrayList<Playlist> mplaylists = new ArrayList<>();
+    private ArrayList<Song> playlistSongs = new ArrayList<>();
     private ListView playlistView;
 
     @Override
@@ -51,14 +52,23 @@ public class MainActivity extends AppCompatActivity {
             playlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(MainActivity.this, SongListActivity.class);
-                    intent.putExtra("PlaylistID",mplaylists.get(position).getId());
-                    startActivity(intent);
+                    songService.getPlaylistSongs(() -> {
+                        playlistSongs = songService.getSongs();
+                        Intent intent = new Intent(MainActivity.this, OnBoardingActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("ChosenPlaylist",playlistSongs);
+                        intent.putExtras(bundle);
+                        finish();
+                        //intent.putExtra("PlaylistID",mplaylists.get(position).getId());
+                        startActivity(intent);
+                    },mplaylists.get(position).getId());
                 }
             });
         });
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 }

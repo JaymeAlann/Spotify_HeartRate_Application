@@ -61,6 +61,8 @@ public class PlayerService extends Service {
         chosenPlaylistUnsorted = (ArrayList<Song>)bundle.getSerializable("ChosenPlaylist");
         // Add song to already played list
         previousSongs = new ArrayList<>();
+
+        /**
         Song chosenSong = (Song)bundle.getSerializable("ChosenSong");
         previousSongs.add(chosenSong);
 
@@ -70,7 +72,7 @@ public class PlayerService extends Service {
         songArtist = chosenSong.getAlbum().getAlbumArtists().get(0).getArtistName();
         songIMG = chosenSong.getAlbum().getAlbumImages().get(0).getUrl();
         songPos = intent.getIntExtra("SongPosition",0);
-
+        **/
         setPlayerState();
 
         return START_STICKY;
@@ -88,14 +90,16 @@ public class PlayerService extends Service {
         songService.getSongsAudioFeatures(() -> {
             playlistAudioFeatures = songService.getAudioFeatures();
             Log.i("AUDIO FEATURES LIST: ",playlistAudioFeatures.size()+"");
+            /**
             previousSongs.get(0).setSongAudioFeatures(playlistAudioFeatures.get(songPos));
             songTempo = previousSongs.get(0).getSongAudioFeatures().getTempo();
             songDuration = playlistAudioFeatures.get(songPos).getDuration_ms();
+             **/
             for(AudioFeatures features : playlistAudioFeatures){
                 chosenPlaylistUnsorted.get(playlistAudioFeatures.indexOf(features)).setSongAudioFeatures(features);
             }
             chosenPlaylistUnsorted = quickSort(chosenPlaylistUnsorted);
-
+            getNextSongForQueue();
             countdown = songDuration;
 
             new Thread(new Runnable() {
