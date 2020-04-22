@@ -14,5 +14,9 @@
     <string name="tempo">BPM: 00.00</string>
     <string name="SearchDevice">Search For Device</string>
     <string name="DialogHeaderBluetooth">Please select your bluetooth device</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyD7ck5vHVTkbTvFHjdByNuRVOyRRLc8vAE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
