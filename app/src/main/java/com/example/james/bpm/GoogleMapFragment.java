@@ -13,10 +13,13 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Chronometer;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,10 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -45,7 +45,10 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     private LocationManager locationManager;
     Double latitude;
     Double longitude;
+    Boolean isRunning = false;
     ArrayList<LatLng> LatLngList = new ArrayList<>();
+    Button startStopBtn;
+    Chronometer workoutTime;
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -71,6 +74,25 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
 
+        workoutTime = view.findViewById(R.id.chronometer);
+        startStopBtn = view.findViewById(R.id.startstop);
+        startStopBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isRunning){
+                    workoutTime.setVisibility(View.VISIBLE);
+                    startStopBtn.setText(R.string.stop_workout);
+                    workoutTime.setBase(SystemClock.elapsedRealtime());
+                    workoutTime.start();
+                    isRunning = true;
+                }else if(isRunning){
+                    startStopBtn.setText(R.string.start_workout);
+                    workoutTime.stop();
+                    isRunning = false;
+                }
+            }
+        });
+
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -84,7 +106,9 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
                     LatLng latLng = new LatLng(latitude, longitude);
-                    LatLngList.add(latLng);
+                    if(isRunning){
+                        LatLngList.add(latLng);
+                    }
                     Geocoder geocoder = new Geocoder(getActivity().getApplicationContext());
                     BitmapDrawable drawable = (BitmapDrawable)getResources().getDrawable(R.drawable.mapicon);
                     Bitmap bitmap = drawable.getBitmap();
