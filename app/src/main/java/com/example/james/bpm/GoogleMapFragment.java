@@ -1,15 +1,21 @@
 package com.example.james.bpm;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -28,6 +34,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
@@ -42,13 +50,16 @@ import static android.content.Context.LOCATION_SERVICE;
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private Polyline mPolyline;
     private LocationManager locationManager;
-    Double latitude;
-    Double longitude;
-    Boolean isRunning = false;
-    ArrayList<LatLng> LatLngList = new ArrayList<>();
-    Button startStopBtn;
-    Chronometer workoutTime;
+    private Double latitude;
+    private Double longitude;
+    private Boolean isRunning = false;
+    private long distanceTraveled = 0;
+    private ArrayList<LatLng> LatLngList = new ArrayList<>();
+    private ArrayList<Double> locationAltidude = new ArrayList<>();
+    private Button startStopBtn;
+    private Chronometer workoutTime;
 
     private final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -62,6 +73,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -105,6 +117,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
                 public void onLocationChanged(Location location) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
+                    locationAltidude.add(location.getAltitude());
                     LatLng latLng = new LatLng(latitude, longitude);
                     if(isRunning){
                         LatLngList.add(latLng);
@@ -114,6 +127,7 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
                     Bitmap bitmap = drawable.getBitmap();
                     Bitmap icon_small = Bitmap.createScaledBitmap(bitmap, 50,50,false);
                     mMap.clear();
+                    drawPolyLine();
                     mMap.addMarker(new MarkerOptions().position(latLng).title("currentAddress").icon(BitmapDescriptorFactory.fromBitmap(icon_small)));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18.0f));
                 }
@@ -136,6 +150,43 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         }
 
         return view;
+    }
+
+    public static double distance(double lat1, double lat2, double lon1, double lon2, double el1, double el2) {
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = R * c * 1000; // convert to meters
+
+        double height = el1 - el2;
+
+        distance = Math.pow(distance, 2) + Math.pow(height, 2);
+
+        return Math.sqrt(distance);
+    }
+
+    public void drawPolyLine(){
+        for (int i = 0; i < LatLngList.size()-1; i++){
+            LatLng src = LatLngList.get(i);
+            double srcAlt = locationAltidude.get(i);
+            LatLng dest = LatLngList.get(i + 1);
+            double destAlt = locationAltidude.get(i + 1);
+
+            distanceTraveled += distance(src.latitude, dest.latitude, src.longitude, dest.longitude, srcAlt, destAlt);
+
+            mPolyline = mMap.addPolyline(
+                    new PolylineOptions().add(
+                            new LatLng(src.latitude, src.longitude),
+                            new LatLng(dest.latitude,dest.longitude)
+                    ).width(10).color(Color.BLUE).geodesic(true)
+            );
+        }
     }
 
     @Override
