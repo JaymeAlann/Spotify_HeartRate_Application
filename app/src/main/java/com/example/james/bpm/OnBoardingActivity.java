@@ -222,6 +222,7 @@ public class OnBoardingActivity extends FragmentActivity {
         fragList.add(SongVisualFragment.newInstance());
         fragList.add(HeartRateFragment.newInstance());
         fragList.add(GoogleMapFragment.newInstance());
+        fragList.add(CameraFragment.newInstance());
         return fragList;
     }
 
