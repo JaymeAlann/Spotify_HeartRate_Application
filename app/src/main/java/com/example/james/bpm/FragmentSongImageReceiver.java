@@ -10,8 +10,6 @@ public class FragmentSongImageReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         String url = intent.getStringExtra("ImageURL");
-        Log.i("BROADCAST RECEIVER: ", "BROADCAST RECEIVED");
-
         try {
             SongVisualFragment.getInstance().updateTheImageView(url);
         } catch (Exception e) {

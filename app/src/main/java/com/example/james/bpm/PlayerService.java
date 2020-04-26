@@ -1,7 +1,10 @@
 package com.example.james.bpm;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,7 +44,7 @@ public class PlayerService extends Service {
     private ArrayList<AudioFeatures> playlistAudioFeatures;
     private ArrayList<Song> previousSongs;
     private long songDuration;
-
+    private int heartRate = 60;
     private static final String CLIENT_ID = "7f5cfb2a85b145608e657b2a9bf88da7";
     private static final String REDIRECT_URI = "com.example.james.bpm://callback";
     private SpotifyAppRemote mSpotifyAppRemote;
@@ -51,6 +54,10 @@ public class PlayerService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.intent.action.BPM_RECEIVED");
+        registerReceiver(bpmReceiver,filter);
 
         isRunning = true;
         songService = new SongService(getApplicationContext());
@@ -62,17 +69,6 @@ public class PlayerService extends Service {
         // Add song to already played list
         previousSongs = new ArrayList<>();
 
-        /**
-        Song chosenSong = (Song)bundle.getSerializable("ChosenSong");
-        previousSongs.add(chosenSong);
-
-        // Set current song information to chosen song.
-        songURI = chosenSong.getSongUri();
-        songName = chosenSong.getSongName();
-        songArtist = chosenSong.getAlbum().getAlbumArtists().get(0).getArtistName();
-        songIMG = chosenSong.getAlbum().getAlbumImages().get(0).getUrl();
-        songPos = intent.getIntExtra("SongPosition",0);
-        **/
         setPlayerState();
 
         return START_STICKY;
@@ -90,11 +86,6 @@ public class PlayerService extends Service {
         songService.getSongsAudioFeatures(() -> {
             playlistAudioFeatures = songService.getAudioFeatures();
             Log.i("AUDIO FEATURES LIST: ",playlistAudioFeatures.size()+"");
-            /**
-            previousSongs.get(0).setSongAudioFeatures(playlistAudioFeatures.get(songPos));
-            songTempo = previousSongs.get(0).getSongAudioFeatures().getTempo();
-            songDuration = playlistAudioFeatures.get(songPos).getDuration_ms();
-             **/
             for(AudioFeatures features : playlistAudioFeatures){
                 chosenPlaylistUnsorted.get(playlistAudioFeatures.indexOf(features)).setSongAudioFeatures(features);
             }
@@ -160,6 +151,13 @@ public class PlayerService extends Service {
                 });
     }
 
+    private final BroadcastReceiver bpmReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+              int bpm = intent.getIntExtra("BeatsPerMinute", 60);
+              heartRate = bpm;
+        }
+    };
 
 
     private void startGenerator(){
@@ -179,7 +177,6 @@ public class PlayerService extends Service {
                     serviceIntent.putExtra("SongTempo",songTempo);
                     serviceIntent.setAction("android.intent.action.IMAGE_RECEIVED");
                     sendBroadcast(serviceIntent);
-                    Log.i(TAG, "BROADCAST SENT");
                 }
                 if(countdown<=3000){
                     getNextSongForQueue();
@@ -218,7 +215,6 @@ public class PlayerService extends Service {
             return;
         }
         chosenPlaylistUnsorted = quickSort(chosenPlaylistUnsorted);
-        int heartRate = 85;
         Iterator<Song> iterator = chosenPlaylistUnsorted.iterator();
         while (iterator.hasNext() && iterator.next().getSongAudioFeatures().getTempo() <= heartRate){
             Log.i(TAG, iterator.next().getSongName()+" Tempo: "+iterator.next().getSongAudioFeatures().getTempo());
@@ -269,9 +265,7 @@ public class PlayerService extends Service {
     private void stopServiceGenerator(){isRunning=false;}
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
+    public void onCreate() { super.onCreate(); }
 
     @Nullable
     @Override
