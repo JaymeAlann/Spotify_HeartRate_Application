@@ -60,7 +60,6 @@ public class HeartRateFragment extends Fragment{
     private UUID CHARACTERISTIC_UPDATE_NOTIFICATION_DESCRIPTOR_UUID = convertFromInteger(0x2902);
 
     private TextView hearRateText;
-    public ArrayList<BluetoothDevice> mBTDevices = new ArrayList<>();
 
     public UUID convertFromInteger(int i) {
         final long MSB = 0x0000000000001000L;
@@ -93,6 +92,7 @@ public class HeartRateFragment extends Fragment{
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
+        Log.e(TAG, "Getting location permission");
         if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("This app needs location access");
@@ -107,7 +107,6 @@ public class HeartRateFragment extends Fragment{
             builder.show();
         }
         PulsatorLayout pulsator = view.findViewById(R.id.pulsator);
-        //pulsator.setDuration();
         pulsator.start();
 
         gattCallback = new BluetoothGattCallback() {
@@ -197,21 +196,18 @@ public class HeartRateFragment extends Fragment{
                 Objects.requireNonNull(getActivity()).sendBroadcast(heartIntent);
             }
         };
-        scanCallback = new BluetoothAdapter.LeScanCallback() {
+        scanCallback = (device, rssi, scanRecord) -> getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mBTDevice = device;
-                        mBluetoothAdapter.stopLeScan(scanCallback);
-                        mBTDevice.connectGatt(getActivity(), false, gattCallback, BluetoothDevice.TRANSPORT_LE);
-                    }
-                });
+            public void run() {
+                mBTDevice = device;
+                Log.e(TAG,"Device Connected");
+                mBTDevice.connectGatt(getActivity(), false, gattCallback, BluetoothDevice.TRANSPORT_LE);
+                mBluetoothAdapter.stopLeScan(scanCallback);
             }
-        };
+        });
         UUID[] filter = new UUID[1];
         filter[0] = HEART_RATE_SERVICE_UUID;
+        Log.e(TAG, "Starting scan");
         mBluetoothAdapter.startLeScan(filter, scanCallback);
 
         return view;

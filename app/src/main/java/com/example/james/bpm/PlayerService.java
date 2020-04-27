@@ -29,9 +29,7 @@ public class PlayerService extends Service {
     private final String TAG = "Player Service: ";
     public static final int GET_RANDOM_NUMBER_FLAG = 0;
     private IBinder myBinder = new myBinder();
-    //TESTER HEART RATE (DELETE LATER)
     private long countdown;
-    private int currentBPM=105;
 
 
     private HeartRateFragment heartRateFragment;
@@ -54,11 +52,9 @@ public class PlayerService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.intent.action.BPM_RECEIVED");
         registerReceiver(bpmReceiver,filter);
-
         isRunning = true;
         songService = new SongService(getApplicationContext());
         Log.i(TAG, "In OnStartCommand Thread ID is "+Thread.currentThread().getId());
@@ -154,13 +150,14 @@ public class PlayerService extends Service {
     private final BroadcastReceiver bpmReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-              int bpm = intent.getIntExtra("BeatsPerMinute", 60);
+              int bpm = intent.getIntExtra("BeatsPerMinute", 77);
               heartRate = bpm;
         }
     };
 
 
     private void startGenerator(){
+
         while(isRunning){
             try {
                 Thread.sleep(1000);
@@ -265,7 +262,10 @@ public class PlayerService extends Service {
     private void stopServiceGenerator(){isRunning=false;}
 
     @Override
-    public void onCreate() { super.onCreate(); }
+    public void onCreate() {
+        super.onCreate();
+
+    }
 
     @Nullable
     @Override
@@ -296,7 +296,7 @@ public class PlayerService extends Service {
     public void onDestroy() {
         super.onDestroy();
         stopServiceGenerator();
-        Log.i(TAG, "Service Destroyed.");
+        unregisterReceiver(bpmReceiver);
     }
 
 
