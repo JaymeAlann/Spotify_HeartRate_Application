@@ -86,13 +86,17 @@ public class HeartRateFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_heart_rate, container, false);
         // Inflate the layout for this fragment
         hearRateText = view.findViewById(R.id.HeartRateText);
-        final BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+        //final BluetoothManager bluetoothManager = (BluetoothManager) getActivity().getSystemService(Context.BLUETOOTH_SERVICE);
+        //mBluetoothAdapter = bluetoothManager.getAdapter();
+        /**
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
-        Log.e(TAG, "Getting location permission");
+         **/
+        PulsatorLayout pulsator = view.findViewById(R.id.pulsator);
+        pulsator.start();
+        /**
         if (getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("This app needs location access");
@@ -209,7 +213,7 @@ public class HeartRateFragment extends Fragment{
         filter[0] = HEART_RATE_SERVICE_UUID;
         Log.e(TAG, "Starting scan");
         mBluetoothAdapter.startLeScan(filter, scanCallback);
-
+        **/
         return view;
     }
 
@@ -223,20 +227,20 @@ public class HeartRateFragment extends Fragment{
     @Override
     public void onPause() {
         super.onPause();
-        mBluetoothAdapter.stopLeScan(scanCallback);
+        //mBluetoothAdapter.stopLeScan(scanCallback);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mBluetoothAdapter.startLeScan(scanCallback);
+        //mBluetoothAdapter.startLeScan(scanCallback);
 
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mBluetoothAdapter.stopLeScan(scanCallback);
+        //mBluetoothAdapter.stopLeScan(scanCallback);
     }
 
     @Override

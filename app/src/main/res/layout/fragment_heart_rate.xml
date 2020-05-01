@@ -57,7 +57,6 @@
                 android:layout_height="110dp"
                 android:textAlignment="center"
                 android:gravity="center_horizontal"
-                android:text="79"
                 android:textColor="#FFFFFF"
                 android:textSize="55sp"
                 app:layout_constraintBottom_toBottomOf="@+id/SongImageView"

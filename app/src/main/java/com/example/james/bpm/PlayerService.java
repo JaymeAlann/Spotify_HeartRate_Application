@@ -150,7 +150,7 @@ public class PlayerService extends Service {
     private final BroadcastReceiver bpmReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-              int bpm = intent.getIntExtra("BeatsPerMinute", 77);
+              int bpm = intent.getIntExtra("BeatsPerMinute", 60);
               heartRate = bpm;
         }
     };
